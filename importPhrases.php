@@ -64,7 +64,13 @@
 
 $data = file_get_contents("phrases.json");
 $data = json_decode($data);
-var_dump($data);
+foreach($data as $obj){
+     foreach($obj as $key=>$val){
+        $stmt= $pdo->prepare("INSERT INTO $dbname ($key) VALUES ($val);");
+				$stmt->execute();
+				$result = $stmt->fetch();
+     }
+}
 
 
 			
