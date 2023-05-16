@@ -43,7 +43,8 @@
         $title = $_POST['title']??"";
         $num= $_POST['num']??"";
         $amount = $_POST['amount']??"";
-        
+        $eng = 'eng';
+        $test = "test";
 
         
         //key values
@@ -64,11 +65,13 @@
 
 $data = file_get_contents("phrases.json");
 $data = json_decode($data);
+
 foreach($data as $obj){
      foreach($obj as $key=>$val){
-        $stmt= $pdo->prepare("INSERT INTO $dbname ($key) VALUES ($val);");
-				$stmt->execute();
-				$result = $stmt->fetch();
+          //echo "$key  $val <br>";
+          $sql = "insert into phrase(?) values(?);";
+        $stmt= $pdo->prepare($sql);
+        $stmt->execute(["eng", "test"]);
      }
 }
 
