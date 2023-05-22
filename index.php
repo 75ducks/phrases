@@ -140,9 +140,11 @@
 			session_start();
 		
 			$version = "1.01";
-			$title = $_POST['title']??"";
 			$num= $_POST['num']??"";
-			$amount = $_POST['amount']??"";
+			$eng = $_POST['eng']??"";
+			$cay = $_POST['cay']??"";
+			$moh = $_POST['moh']??"";
+			$category = $_POST['category']??"";
 			
 
 			
@@ -150,7 +152,7 @@
 			$host = "localhost";
 			$user = "root";
 			$password = "";
-			$dbname = "mario";     //Name of Your DB
+			$dbname = "langmatch";     //Name of Your DB
 								
 								
 			//set data source name
@@ -179,15 +181,17 @@
 			//if this is the first time you've started up the program
 			if (empty($num)) 
 			{
-				$stmt= $pdo->prepare("select * from pieces order by num+0. limit 1");
+				$stmt= $pdo->prepare("select * from phrases order by num+0. limit 1");
 				$stmt->execute();
 				$result = $stmt->fetch();
 				
 				
 				$num = $result->num;
 				$_SESSION['num'] = $num;
-				$title = $result->title;
-				$amount = $result->amount;
+				$eng = $result->eng;
+				$cay = $result->cay;
+				$moh = $result->moh;
+				$category = $result->category;
 				
 			}
 	
@@ -195,7 +199,7 @@
 			else if (isset( $_POST['nextbutton'] ))
 			{
 				
-				$sql = "select * from pieces where num > ? limit 1";
+				$sql = "select * from phrases where num > ? limit 1";
 				$stmt= $pdo->prepare($sql);
 				$stmt->execute([$num]);
 				$result = $stmt->fetch();
@@ -204,8 +208,10 @@
 				{
 					$num = $result->num;
 					$_SESSION['num'] = $num;
-					$title = $result->title;		
-					$amount = $result->amount;
+					$eng = $result->eng;
+					$cay = $result->cay;
+					$moh = $result->moh;
+					$category = $result->category;
 				}
 			
 			}
@@ -213,7 +219,7 @@
 			//if the previous button is pressed
 			else if (isset( $_POST['previousbutton'] ))
 			{
-				$sql = "select * from pieces where num < ? order by num+0 desc limit 1";
+				$sql = "select * from phrases where num < ? order by num+0 desc limit 1";
 				$stmt= $pdo->prepare($sql);
 				$stmt->execute([$num]);
 				$result = $stmt->fetch();
@@ -222,8 +228,10 @@
 				{
 					$num = $result->num;
 					$_SESSION['num'] = $num;
-					$title = $result->title;
-					$amount = $result->amount;
+					$eng = $result->eng;
+					$cay = $result->cay;
+					$moh = $result->moh;
+					$category = $result->category;
 				}
 			
 			}
@@ -231,7 +239,7 @@
 			//if the delete button is pressed
 			else if (isset( $_POST['deletebutton'] ))
 			{
-				$sql = "delete from pieces where num = ? ";
+				$sql = "delete from phrases where num = ? ";
 				$stmt= $pdo->prepare($sql);
 				$stmt->execute([$num]);
 			
@@ -239,18 +247,18 @@
 			//if the save button is pressed
 			else if (isset( $_POST['savebutton'] ))
 			{
-				$sql = "update pieces set title = ?, num = ?, amount = ? where num = ? ";
+				$sql = "update phrases set eng = ?, cay = ?, moh = ?, category = ? where num = ? ";
 				$stmt= $pdo->prepare($sql);
-				$stmt->execute([$title,$num,$amount,$num]);
+				$stmt->execute([$eng,$cay,$moh,$category,$num]);
 			
 			}						
 						
 			//if the add button is pressed
 			else if (isset( $_POST['addbutton'] ))
 			{
-				$sql = "insert into pieces values(?, ?, ?)";
+				$sql = "insert into phrases values(?, ?, ?, ?, ?)";
 				$stmt= $pdo->prepare($sql);
-				$stmt->execute([ $_POST['num'],$_POST['title'], $_POST['amount']]);
+				$stmt->execute([ $_POST['num'],$_POST['eng'], $_POST['cay'], $_POST['moh'], $_POST['category']]);
 				
 			}	
 		
@@ -265,14 +273,20 @@
 		
 			<form method="POST" action = "<?= $_SERVER['PHP_SELF']; ?>" name=regform>
 				
-				<label>Title:</label>
-				<input class= "text" type="text" name="title"  size="45" value="<?= $title ?>"><br><br>
+				<label>num:</label>
+				<input class= "text" type="text" name="num"  size="45" value="<?= $num ?>"><br><br>
 				
-				<label>Number:</label>
-				<input class= "text" type="text" name="num"  value="<?= $num ?>"><br><br>
+				<label>eng:</label>
+				<input class= "text" type="text" name="eng"  value="<?= $eng ?>"><br><br>
 				
-				<label>Value:</label>
-				<input  class= "text" type="text" name="amount"  value="<?= $amount ?>"><br><br>
+				<label>cay:</label>
+				<input  class= "text" type="text" name="cay"  value="<?= $cay ?>"><br><br>
+
+				<label>moh:</label>
+				<input  class= "text" type="text" name="moh"  value="<?= $moh ?>"><br><br>
+
+				<label>category:</label>
+				<input  class= "text" type="text" name="category"  value="<?= $category ?>"><br><br>
 				
 				
 				<!-- These buttons need to be changed to  type="image" -->
